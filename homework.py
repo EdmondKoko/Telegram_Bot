@@ -35,7 +35,7 @@ logging.basicConfig(
 
 
 def check_tokens():
-    """Проверка токена"""
+    """Проверка токена."""
     if not PRACTICUM_TOKEN or not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         logging.critical('Отсутствует одна из переменных окружения')
         return False
@@ -43,7 +43,7 @@ def check_tokens():
 
 
 def send_message(bot, message):
-    """Отправка сообщения в Telegram"""
+    """Отправка сообщения в Telegram."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logging.debug('Отправка сообщения')
@@ -53,7 +53,7 @@ def send_message(bot, message):
 
 
 def get_api_answer(timestamp):
-    """Запрос к API-сервису"""
+    """Запрос к API-сервису."""
     try:
         response = requests.get(
             url=ENDPOINT,
@@ -71,7 +71,7 @@ def get_api_answer(timestamp):
 
 
 def check_response(response):
-    """Проверка ответа API"""
+    """Проверка ответа API."""
     try:
         homeworks = response['homeworks']
     except KeyError as error:
@@ -83,7 +83,7 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Получение статуса работы"""
+    """Получение статуса работы."""
     status = homework.get('status')
     if status is None:
         raise TypeError
@@ -100,7 +100,7 @@ def parse_status(homework):
 
 
 def main():
-    """Основная логика работы бота"""
+    """Основная логика работы бота."""
     logging.info('Старт')
     if not check_tokens():
         sys.exit()
