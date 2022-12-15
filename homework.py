@@ -62,14 +62,14 @@ def get_api_answer(timestamp):
         )
     except requests.RequestException as error:
         logger.error(f'Ошибка при запросе к API: {error}')
-        raise ConnectionError(f'Ошибка при запросе к API')
+        raise ConnectionError('Ошибка при запросе к API')
     if response.status_code != HTTPStatus.OK:
-        logger.error(f'Ошибка соединения с API')
+        logger.error('Ошибка соединения с API')
         raise ConnectionError('Ошибка соединения с API')
     try:
         return response.json()
     except simplejson.errors.JSONDecodeError:
-        logger.error(f'Ошибка ответа API')
+        logger.error('Ошибка ответа API')
         raise TypeError('Ошибка ответа API')
 
 
