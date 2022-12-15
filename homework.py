@@ -3,8 +3,9 @@ import os
 import sys
 import time
 from http import HTTPStatus
-import simplejson
+
 import requests
+import simplejson
 import telegram
 from dotenv import load_dotenv
 
@@ -45,10 +46,10 @@ def send_message(bot, message):
     """Отправка сообщения в Telegram."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
-        logger.debug('Отправка сообщения')
+        logger.debug('Отправка сообщения в Telegram')
     except telegram.error.TelegramError as error:
-        logger.error(f'Не удалось отправить сообщение: {error}')
-        raise Exception('Не удалось отправить сообщение')
+        logger.error(f'Не удалось отправить сообщение в Telegram: {error}')
+        raise Exception('Не удалось отправить сообщение в Telegram')
 
 
 def get_api_answer(timestamp):
@@ -61,13 +62,15 @@ def get_api_answer(timestamp):
         )
     except requests.RequestException as error:
         logger.error(f'Ошибка при запросе к API: {error}')
+        raise ConnectionError(f'Ошибка при запросе к API')
     if response.status_code != HTTPStatus.OK:
-        raise ConnectionError('Ошибка при запросе к API')
+        logger.error(f'Ошибка соединения с API')
+        raise ConnectionError('Ошибка соединения с API')
     try:
         return response.json()
     except simplejson.errors.JSONDecodeError:
-        logger.error('Ошибка ответа сервера')
-        send_message('Ошибка ответа сервера')
+        logger.error(f'Ошибка ответа API')
+        raise TypeError('Ошибка ответа API')
 
 
 def check_response(response):
@@ -76,6 +79,7 @@ def check_response(response):
         homeworks = response['homeworks']
     except KeyError as error:
         logger.error(f'Ошибка доступа по ключу: {error}')
+        raise KeyError('Ошибка доступа по ключу')
     if not isinstance(homeworks, list):
         logger.error('Неверный формат ответа')
         raise TypeError('Неверный формат ответа')
@@ -105,7 +109,7 @@ def main():
     if not check_tokens():
         sys.exit()
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    timestamp = int(time.time()) - RETRY_PERIOD
+    timestamp = int(time.time())
     prev_message: str = ''
     while True:
         try:
