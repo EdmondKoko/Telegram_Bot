@@ -15,13 +15,13 @@
 Клонируем проект:
 
 ```bash
-git clone https://github.com/edmondkoko/tg_bot.git
+git clone https://github.com/edmondkoko/Telegram_Bot.git
 ```
 
 Переходим в папку с проектом:
 
 ```bash
-cd tg_bot
+cd Telegram_Bot
 ```
 
 Устанавливаем виртуальное окружение:
